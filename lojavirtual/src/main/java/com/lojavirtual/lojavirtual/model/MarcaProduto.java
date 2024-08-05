@@ -1,6 +1,7 @@
 package com.lojavirtual.lojavirtual.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +22,7 @@ public class MarcaProduto implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_marca_produto")
 	private Long id;
 
-	@Column(name = "mome_descricao")
+	@Column(name = "mome_descricao", nullable = false)
 	private String nomeDesc;
 
 	public Long getId() {
@@ -39,5 +40,24 @@ public class MarcaProduto implements Serializable {
 	public void setNomeDesc(String nomeDesc) {
 		this.nomeDesc = nomeDesc;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, nomeDesc);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MarcaProduto other = (MarcaProduto) obj;
+		return Objects.equals(id, other.id) && Objects.equals(nomeDesc, other.nomeDesc);
+	}
+	
+	
 
 }
