@@ -14,10 +14,13 @@ public class PessoaJuridica extends Pessoa {
 	@Column(nullable = false)
 	private String cnpj;
 
+	@Column(nullable = false)
 	private String inscricaoEstadual;
 
+	@Column(nullable = false)
 	private String inscricaoMunicipal;
 
+	@Column(nullable = false)
 	private String nomeFantasia;
 
 	@Column(nullable = false)

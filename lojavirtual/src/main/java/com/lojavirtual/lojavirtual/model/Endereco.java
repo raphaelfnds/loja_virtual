@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import com.lojavirtual.lojavirtual.enuns.TipoEndereco;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -29,24 +30,31 @@ public class Endereco implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_endereco")
 	private Long id;
 
+	@Column(nullable = false)
 	private String cep;
 
+	@Column(nullable = false)
 	private String logradouro;
 
+	@Column(nullable = false)
 	private String numero;
 
 	private String complemento;
 
+	@Column(nullable = false)
 	private String bairo;
 
+	@Column(nullable = false)
 	private String cidade;
 
+	@Column(nullable = false)
 	private String uf;
 
 	@ManyToOne(targetEntity = Pessoa.class)
 	@JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
 	private Pessoa pessoa;
 	
+	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private TipoEndereco endereco;
 	
