@@ -68,6 +68,11 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+		    <groupId>org.flywaydb</groupId>
+		    <artifactId>flyway-core</artifactId>
+		    <version>9.0.0</version> <!-- ou uma versão mais recente -->
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -1,0 +1,1 @@
+ALTER TABLE public.acesso DROP COLUMN teste;

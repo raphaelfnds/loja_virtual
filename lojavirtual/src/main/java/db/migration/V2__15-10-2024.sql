@@ -1,0 +1,1 @@
+ALTER TABLE public.acesso ADD COLUMN teste VARCHAR(255);
