@@ -2,6 +2,7 @@ package com.lojavirtual.lojavirtual.security;
 
 import java.io.IOException;
 
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -51,5 +52,27 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
 		} catch (Exception e) {
 			throw new RuntimeException("Falha ao gerar token JWT", e);
 		}
+	}
+
+	@Override
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+			AuthenticationException failed) throws IOException, ServletException {
+
+		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+
+		String errorMessage;
+
+		if (failed instanceof BadCredentialsException) {
+			errorMessage = "Usuário ou senha inválido(a)!";
+		} else {
+			errorMessage = "Erro no login: " + failed.getMessage();
+		}
+
+		String jsonResponse = String.format("{\"error\": \"%s\"}", errorMessage);
+
+		response.getWriter().write(jsonResponse);
+
 	}
 }

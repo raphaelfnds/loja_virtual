@@ -33,11 +33,7 @@ public class JWTTokenAutenticacaoService {
 
     public void addAuthentication(HttpServletResponse response, String username) throws Exception {
 
-        String token = Jwts.builder()
-                .setSubject(username)
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(secretKey)
-                .compact();
+        String token = Jwts.builder().setSubject(username).setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME)).signWith(secretKey).compact();
 
         String fullToken = TOKEN_PREFIX + token;
 
@@ -56,44 +52,28 @@ public class JWTTokenAutenticacaoService {
 
             String tokenLimpo = token.replace(TOKEN_PREFIX, "").trim();
 
-            String user = Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(tokenLimpo)
-                    .getBody()
-                    .getSubject();
+            String user = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(tokenLimpo).getBody().getSubject();
 
             if (user != null) {
-                Usuario usuario = ApplicationContextLoad
-                        .getApplicationContext()
-                        .getBean(UsuarioRepository.class)
-                        .findByLogin(user);
+                Usuario usuario = ApplicationContextLoad.getApplicationContext().getBean(UsuarioRepository.class).findByLogin(user);
 
                 if (usuario != null) {
-                    return new UsernamePasswordAuthenticationToken(
-                            usuario.getLogin(),
-                            null,
-                            usuario.getAuthorities());
+                    return new UsernamePasswordAuthenticationToken(usuario.getLogin(), null, usuario.getAuthorities());
                 }
             }
         }
 
-        liberarCors(response);
         return null;
     }
 
-    private void liberarCors(HttpServletResponse response) {
-        if (!response.getHeaderNames().contains("Access-Control-Allow-Origin")) {
-            response.addHeader("Access-Control-Allow-Origin", "*");
-        }
-        if (!response.getHeaderNames().contains("Access-Control-Allow-Headers")) {
-            response.addHeader("Access-Control-Allow-Headers", "*");
-        }
-        if (!response.getHeaderNames().contains("Access-Control-Expose-Headers")) {
-            response.addHeader("Access-Control-Expose-Headers", "*");
-        }
-        if (!response.getHeaderNames().contains("Access-Control-Allow-Methods")) {
-            response.addHeader("Access-Control-Allow-Methods", "*");
-        }
+    public void liberarCors(HttpServletResponse response) {
+    	
+        if (!response.getHeaderNames().contains("Access-Control-Allow-Origin")) response.addHeader("Access-Control-Allow-Origin", "*");
+
+        if (!response.getHeaderNames().contains("Access-Control-Allow-Headers")) response.addHeader("Access-Control-Allow-Headers", "*");
+        
+        if (!response.getHeaderNames().contains("Access-Control-Expose-Headers")) response.addHeader("Access-Control-Expose-Headers", "*");
+        
+        if (!response.getHeaderNames().contains("Access-Control-Allow-Methods")) response.addHeader("Access-Control-Allow-Methods", "*");
     }
 }
