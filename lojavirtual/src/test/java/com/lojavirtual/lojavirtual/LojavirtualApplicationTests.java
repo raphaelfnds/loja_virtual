@@ -16,7 +16,7 @@ public class LojavirtualApplicationTests {
     private AcessoController acessoController;
 
     @Test
-    void testeCadastraAcesso() {
+    void testeCadastraAcesso() throws ExceptionCustom {
         Acesso acesso = new Acesso();
         acesso.setDescricao("ROLE_ADMIN");
         acesso = acessoController.salvarAcesso(acesso).getBody();

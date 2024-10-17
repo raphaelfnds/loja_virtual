@@ -38,23 +38,39 @@ public class JwtApiAutenticacaoFilter extends OncePerRequestFilter {
 				response.getWriter().write("{\"error\": \"Erro desconhecido na autenticação.\"}");
 			}
 		} catch (ExpiredJwtException e) {
-			System.err.println(e);
+			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			response.setContentType("application/json");
 			jwtTokenAutenticacaoService.liberarCors(response);
 			response.getWriter().write("{\"error\": \"Token expirado, realize novo login.\"}");
 		} catch (SecurityException e) {
-			System.err.println(e);
+			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			response.setContentType("application/json");
 			jwtTokenAutenticacaoService.liberarCors(response);
 			response.getWriter().write("{\"error\": \"Token inválido.\"}");
 		} catch (Exception e) {
-			System.err.println(e);
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			response.setContentType("application/json");
-			jwtTokenAutenticacaoService.liberarCors(response);
-			response.getWriter().write("{\"error\": \"Erro interno do servidor.\"}");
+		    e.printStackTrace();
+		    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		    response.setContentType("application/json");
+		    jwtTokenAutenticacaoService.liberarCors(response);
+
+		    Throwable rootCause = e;
+		    while (rootCause.getCause() != null) {
+		        rootCause = rootCause.getCause();
+		    }
+		    String errorMessage = rootCause.getMessage();
+
+		    if (errorMessage == null || errorMessage.trim().isEmpty()) {
+		        errorMessage = "Erro interno do servidor, se persistir contate o suporte.";
+		        
+		    } else {
+		        errorMessage = errorMessage.replaceAll("[^\\p{L}\\p{N}\\s]", "");
+		        errorMessage = errorMessage.replace("\n", " ").replace("\r", " ").trim().replaceAll(" +", " ");
+		    }
+
+		    response.getWriter().write("{\"error\": \"Erro interno do servidor: " + errorMessage + "\"}");
 		}
+
 	}
 }
